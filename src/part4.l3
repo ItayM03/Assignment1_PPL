@@ -1,15 +1,74 @@
+; Signature: last-item (lst)
+; Type: (List(T1) -> T1)
+; Purpose: Return the last element of a list
+; Pre-conditions: (not (equals? lst '()))
+; Tests:
+; (last-item '(1 2 3)) => 3
+
+
 (define last-item
   (λ (lst)
-    'todo))
+    (if (equals? (cdr lst) '())
+        (car lst)
+        (last-item (cdr lst)))))
+
+
+; Signature: remove-last-item (lst)
+; Type: (List(T1) -> List(T1))
+; Purpose: Remove the last item from the list
+; Pre-conditions: (not (equals? lst '()))
+; Tests: 
+; (remove-last-item '(1 2 3)) => '(1 2)
+; (remove-last-item '(1)) => '()
 
 (define remove-last-item
   (λ (lst)
-    'todo))
+    (if (equals? (cdr lst) '())
+        '()
+        (cons (car lst) (remove-last-item (cdr lst))))))
+
+
+; Signature: rotate-nth (lst n)
+; Type: [List(T1) * Number -> List(T1)] 
+; Purpose: Rotates the list n times to the right
+; Pre-conditions: (not (equals? lst '()))    \\ Because of previous functions usage
+; Tests:
+; (rotate-nth '(1 2 3) 1) => '(3 1 2)
+; (rotate-nth '(1 2 3) 4) => '(3 1 2)
 
 (define rotate-nth
   (λ (lst n)
-   'todo))
+    (if (= n 0)
+        lst  
+        (rotate-nth (cons (last-item lst) (remove-last-item lst)) (- n 1)))))
+
+
+; Signature: append(lst1 lst2)
+; Type: [List(T1) * List(T2) -> List(SExp)]
+; Purpose: Helper functions -> concatenate two lists together
+; Pre-conditions: true
+; Tests: (append '(1 2) '(3 4)) => '(1 2 3 4)
+
+(define append
+  (λ (lst1 lst2)
+    (if (equals? lst1 '())
+        lst2
+        (cons (car lst1) (append (cdr lst1) lst2)))))
+
+
+; Signature: deep-reverse (l)
+; Type: (List(SExp) -> List(SExp))
+; Purpose: Returns a list with all elements reversed at every level of nesting
+; Pre-conditions: true
+; Tests: 
+; (deep-reverse '(1 2 3)) => '(3 2 1)
+; (deep-reverse '(1 (2 3) (4 5))) => '((5 4) (3 2) 1)
+; (deep-reverse '()) => '()
 
 (define deep-reverse
-  (λ (l)
-    'todo))
+  (λ (lst)
+    (if (equals? lst '())
+        '()
+        (if (pair? (car lst))
+            (append (deep-reverse (cdr lst)) (cons (deep-reverse (car lst)) '()))
+            (append (deep-reverse (cdr lst)) (cons (car lst) '()))))))

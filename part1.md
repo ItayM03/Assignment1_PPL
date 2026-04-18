@@ -6,35 +6,41 @@ Submit the solution to this part as `part1.md`.
 
 1. Explain in simple words the following programming paradigms:
    1. [5 points] Imperative
+        Answer: A sequence of commands. Running a program means executing the commands in order.
    1. [5 points] Object Oriented
+        Answer: The program is built using objects, each one contains fields and methods.
+                Running a program means creating objects and using their methods.
    1. [5 points] Functional
+        Answer: Every program is a series of expressions. Running a program means calculating these expressions
+                based on certain rules and returning the final value.
 1. [5 points] How does the object oriented paradigm improve over the imperative paradigm?
+        Answer: OOP improves over the imperative paradigm by organizing the code and making it more modular,
+                readable and easier to maintain.
 1. [5 points] How does the functional paradigm improve over the object oriented paradigm?
+        Answer: Functional paradigm improves over OOP by being based on pure functions without side-effects,
+                which leads to the code being easier to test and type-check. Also, it prevents concurrency 
+                issues by immutability.
 
 ### [10 points] Question 1.2
 
 Consider the following TypeScript function, which calculates the average price of all discounted products in a given inventory.
 
 ```ts
-import { reduce, filter, map, length } from "ramda";
-
 type Product = {
     name: string;
     price: number;
     discounted: boolean;
 }
 
-const getDiscountedProductAveragePrice = (inventory: Product[]): number => {
-    let discountedPriceSum = 0;
-    let discountedProductsCount = 0;
+const getDiscountedProductAveragePriceFP = (inventory: Product[]): number => {
 
-    const filtered_inventory = filter((p : Product) => p.discounted, inventory);
+    const filtered_inventory = inventory.filter((p : Product) => p.discounted);
 
-    discountedPriceSum = reduce((acc : number, cur : Product) => acc + cur.price, 0, filtered_inventory);
+    const discountedPriceSum = filtered_inventory.reduce((acc : number, cur : Product) => acc + cur.price, 0);
 
-    discountedProductsCount = R.length(filtered_inventory);
+    const discountedProductsCount = filtered_inventory.length;
 
-    return discountedProductsCount === 0 ? discountedPriceSum / discountedProductsCount : 0;
+    return discountedProductsCount === 0 ? 0 : discountedPriceSum / discountedProductsCount;
 }
 ```
 
@@ -57,9 +63,21 @@ Guidelines:
 - Use generics where possible.
 - Avoid using `any`.
 
-1. [3 points] `(x, y) => x.some(y)`
+1. [3 points] `(x, y) => x.some(y)` 
+    Answer = <T1>(x: T1[], y : (t: T1) => boolean) => boolean
+
 2. [3 points] `x => x.map(y => y * 2)`
+    Answer = (x : number[]) => number[]
+
 3. [3 points] `(x, y) => x.filter(y)`
+    Answer = <T1>(x: T1[], y : (t: T1) => boolean) => T1[]
+
 4. [3 points] `x => x.reduce((acc, cur) => acc + cur, 0)`
+    Answer = (x : number[]) => number
+
 5. [3 points] `(x, y) => x ? y[0] : y[1]`
+    Answer = <T1>(x : boolean, y : T1[]) => T1
+
 6. [3 points] `(f,g) => x => f(g(x+1))`
+    Answer = x : number, g : <T1>(func: (t: number) => T1), f : <T1,T2>(func: (t: T1) => T2)
+    <T1,T2>(f: (t: T1) => T2, g: (x: number) => T1) => ((x: number) => T2)

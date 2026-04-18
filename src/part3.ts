@@ -8,7 +8,9 @@ const findOrThrow = <T>(pred: (x: T) => boolean, a: T[]): T => {
     throw "No element found.";
 }
 
-export const findResult = <T>(pred: (x: T) => boolean, a: T[]): Result<T> => undefined as any;
+export const findResult = <T>(pred: (x: T) => boolean, a: T[]): Result<T> => 
+    a.length === 0 ? makeFailure("Check failed") :
+    pred(a[0]) ? makeOk(a[0]) : findResult(pred, a.slice(1)); 
 
 /* Client code */
 const returnSquaredIfFoundEven_v1 = (a: number[]): number => {
@@ -20,6 +22,8 @@ const returnSquaredIfFoundEven_v1 = (a: number[]): number => {
     }
 }
 
-export const returnSquaredIfFoundEven_v2 = (a: number[]): Result<number> => undefined as any;
-export const returnSquaredIfFoundEven_v3 = (a: number[]): number => undefined as any;
+export const returnSquaredIfFoundEven_v2 = (a: number[]): Result<number> => 
+    bind(findResult((x => x % 2 == 0), a), (x) => makeOk(x*x));
 
+export const returnSquaredIfFoundEven_v3 = (a: number[]): number => 
+    either(findResult((x => x % 2 == 0), a), (x: number) => x*x, (message: string) => -1);
